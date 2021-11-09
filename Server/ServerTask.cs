@@ -31,12 +31,12 @@ namespace PinTcpRedirect.Server
             while (true)
             {
                 byte[] recmsg = PinUdp.Receive(ref pinEp, ref destIp);
-                if (ClientEp is null)
-                    continue;
                 try
                 {
                     TLVHeader tLVHeader = TLVHeader.Deserialize(recmsg);
                     PinMap.AddOrUpdate(tLVHeader.source_serial_id, pinEp, (serial, ep) => pinEp);
+                    if (ClientEp is null)
+                        continue;
                     MyUdp.Send(recmsg, ClientEp);
 
                 }
