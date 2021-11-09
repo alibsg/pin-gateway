@@ -29,7 +29,7 @@ namespace PinTcpRedirect.Client
             MyRIPort = myRIPort;
             UdpFromServer = new(myServerPort);
             UdpLocal = new(MyRIPort);
-            KeepAliveTimer = new Timer(keepAlive, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
+            KeepAliveTimer = new Timer(keepAlive, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(10000));
             keepAlive(null);
         }
 
