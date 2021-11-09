@@ -33,9 +33,18 @@ namespace PinTcpRedirect.Server
                 byte[] recmsg = PinUdp.Receive(ref pinEp, ref destIp);
                 if (ClientEp is null)
                     continue;
-                TLVHeader tLVHeader = TLVHeader.Deserialize(recmsg);
-                PinMap.AddOrUpdate(tLVHeader.source_serial_id, pinEp, (serial, ep) => pinEp);
-                MyUdp.Send(recmsg, ClientEp);
+                try
+                {
+                    TLVHeader tLVHeader = TLVHeader.Deserialize(recmsg);
+                    PinMap.AddOrUpdate(tLVHeader.source_serial_id, pinEp, (serial, ep) => pinEp);
+                    MyUdp.Send(recmsg, ClientEp);
+
+                }
+                catch (System.Exception)
+                {
+                    continue;
+                }
+
             }
         }
         public Task FromClient()
@@ -55,11 +64,19 @@ namespace PinTcpRedirect.Server
                         continue;
                     }
                 }
-                TLVHeader tLVHeader = TLVHeader.Deserialize(recmsg);
-                if (PinMap.TryGetValue(tLVHeader.destination_serial_id, out IPEndPoint? destEp))
+                try
                 {
-                    MyUdp.Send(recmsg, destEp);
+                    TLVHeader tLVHeader = TLVHeader.Deserialize(recmsg);
+                    if (PinMap.TryGetValue(tLVHeader.destination_serial_id, out IPEndPoint? destEp))
+                    {
+                        MyUdp.Send(recmsg, destEp);
+                    }
                 }
+                catch (System.Exception)
+                {
+                    continue;
+                }
+
             }
         }
     }

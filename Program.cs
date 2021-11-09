@@ -8,7 +8,7 @@ Console.WriteLine(String.Join(" ", args));
 List<Task> allTasks = new();
 if (args.Contains("--server"))
 {
-    var server = new ServerTask(2201, 2202);
+    var server = new ServerTask(2221, 2201);
     allTasks.Add(Task.Run(() => server.PinToClient()));
     allTasks.Add(Task.Run(() => server.FromClient()));
 }
